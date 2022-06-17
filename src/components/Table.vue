@@ -1,15 +1,17 @@
 <template>
   <div class="q-pa-md">
     <q-table
-        title="Treats"
-        :rows="rows"
+        title="Users"
+        :rows="users"
         :columns="columns"
-        row-key="name"
     />
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+import {ref} from "vue";
+/*
 const columns = [
   {
     name: 'name',
@@ -28,7 +30,6 @@ const columns = [
   { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
   { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
 ]
-
 const rows = [
   {
     name: 'Frozen Yogurt',
@@ -131,13 +132,30 @@ const rows = [
     iron: '6%'
   }
 ]
-
+*/
 export default {
   name: 'vue-table',
   setup () {
+    const loading = ref(true)
+    const users = ref([])
+    const columns = [
+      { name: 'name', label: 'Name', field: 'name', align: 'left', sortable: true },
+      { name: 'username', label: 'Username', field: 'username', align: 'left', sortable: true },
+      { name: 'email', label: 'Email', field: 'email', align: 'left', sortable: true },
+      { phone: 'name', label: 'Phone', field: 'phone', align: 'left', sortable: true },
+      { name: 'website', label: 'Website', field: 'website', align: 'left', sortable: true },
+    ]
+    axios.get('https://jsonplaceholder.typicode.com/users')
+        .then(response => {
+          users.value = response.data})
+        .finally(() => {
+          loading.value = false
+        })
+
     return {
-      columns,
-      rows
+      loading,
+      users,
+      columns
     }
   }
 }
